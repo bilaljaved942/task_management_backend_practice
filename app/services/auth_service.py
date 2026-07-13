@@ -1,5 +1,10 @@
 from sqlalchemy.orm import Session
 
+from app.core.exceptions import (
+    InvalidCredentialsError,
+    UserAlreadyExistsError,
+)
+from app.core.logging import logger
 from app.core.security import (
     create_access_token,
     hash_password,
@@ -24,9 +29,11 @@ class AuthService:
         )
 
         if existing_user:
-            raise ValueError("Email already registered")
+            raise UserAlreadyExistsError()
 
-        hashed_password = hash_password(user_data.password)
+        hashed_password = hash_password(
+            user_data.password,
+        )
 
         user = User(
             name=user_data.name,
@@ -34,10 +41,17 @@ class AuthService:
             hashed_password=hashed_password,
         )
 
-        return user_repository.create_user(
+        saved_user = user_repository.create_user(
             db,
             user,
         )
+
+        logger.info(
+            "User %s registered successfully",
+            saved_user.email,
+        )
+
+        return saved_user
 
     def login_user(
         self,
@@ -51,13 +65,26 @@ class AuthService:
         )
 
         if not user:
-            raise ValueError("Invalid email or password")
+            logger.warning(
+                "Failed login attempt for %s",
+                user_data.email,
+            )
+            raise InvalidCredentialsError()
 
         if not verify_password(
             user_data.password,
             user.hashed_password,
         ):
-            raise ValueError("Invalid email or password")
+            logger.warning(
+                "Failed login attempt for %s",
+                user_data.email,
+            )
+            raise InvalidCredentialsError()
+
+        logger.info(
+            "User %s logged in",
+            user.email,
+        )
 
         return create_access_token(
             {

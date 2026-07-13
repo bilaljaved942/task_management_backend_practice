@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_user
@@ -18,43 +18,32 @@ router = APIRouter(
 
 
 @router.post(
-    "",
+    "/",
     response_model=TaskResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="Create a new task",
 )
 def create_task(
     task: TaskCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Create a new task for the authenticated user.
-    """
-    try:
-        return task_service.create_task(
-            db,
-            task,
-            current_user,
-        )
-
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+    return task_service.create_task(
+        db,
+        task,
+        current_user,
+    )
 
 
 @router.get(
-    "",
+    "/",
     response_model=list[TaskResponse],
+    summary="Get all tasks of the authenticated user",
 )
 def get_tasks(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Return all tasks belonging to the current user.
-    """
     return task_service.get_tasks(
         db,
         current_user,
@@ -64,32 +53,24 @@ def get_tasks(
 @router.get(
     "/{task_id}",
     response_model=TaskResponse,
+    summary="Get a task by ID",
 )
 def get_task(
     task_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Return a single task.
-    """
-    try:
-        return task_service.get_task(
-            db,
-            task_id,
-            current_user,
-        )
-
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=str(e),
-        )
+    return task_service.get_task(
+        db,
+        task_id,
+        current_user,
+    )
 
 
 @router.put(
     "/{task_id}",
     response_model=TaskResponse,
+    summary="Update an existing task",
 )
 def update_task(
     task_id: int,
@@ -97,45 +78,26 @@ def update_task(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Update an existing task.
-    """
-    try:
-        return task_service.update_task(
-            db,
-            task_id,
-            task,
-            current_user,
-        )
-
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e),
-        )
+    return task_service.update_task(
+        db,
+        task_id,
+        task,
+        current_user,
+    )
 
 
 @router.delete(
     "/{task_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a task",
 )
 def delete_task(
     task_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Delete a task.
-    """
-    try:
-        task_service.delete_task(
-            db,
-            task_id,
-            current_user,
-        )
-
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=str(e),
-        )
+    task_service.delete_task(
+        db,
+        task_id,
+        current_user,
+    )

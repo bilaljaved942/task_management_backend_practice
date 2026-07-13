@@ -4,6 +4,8 @@ from app.api.routes.auth import router as auth_router
 from app.database.database import engine
 from app.api.routes.task import router as task_router
 
+from app.core.exception_handlers import register_exception_handlers
+
 
 app = FastAPI(
     title="Task Manager API",
@@ -12,6 +14,7 @@ app = FastAPI(
 )
 app.include_router(auth_router)
 app.include_router(task_router)
+register_exception_handlers(app)
 
 @app.get("/")
 def root():
