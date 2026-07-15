@@ -1,0 +1,8 @@
+.venv
+__pycache__
+.pytest_cache
+.coverage
+.git
+.gitignore
+.env
+alembic/versions/__pycache__
