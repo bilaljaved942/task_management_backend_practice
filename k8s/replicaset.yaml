@@ -3,6 +3,7 @@ kind: ReplicaSet
 
 metadata:
   name: task-api-rs
+  namespace: task-manager
 
 spec:
   replicas: 1
@@ -27,7 +28,7 @@ spec:
 
         env:
         - name: DATABASE_URL
-          value: "postgresql://postgres:postgres@host.docker.internal:5432/task_manager"
+          value: "postgresql://postgres:postgres@postgres-service:5432/task_manager"
 
         - name: SECRET_KEY
           value: "ThisIsOurSecretKeyForDevelopment"

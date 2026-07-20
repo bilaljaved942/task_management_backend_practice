@@ -3,6 +3,7 @@ kind: Ingress
 
 metadata:
   name: task-api-ingress
+  namespace: task-manager
 
 spec:
   ingressClassName: nginx

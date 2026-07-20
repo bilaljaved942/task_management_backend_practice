@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: task-api-deployment
+  namespace: task-manager
 spec:
   replicas: 2
   selector:

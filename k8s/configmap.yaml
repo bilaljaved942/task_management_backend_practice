@@ -3,6 +3,7 @@ kind: ConfigMap
 
 metadata:
   name: task-api-config
+  namespace: task-manager
 
 data:
   DEBUG: "False"
