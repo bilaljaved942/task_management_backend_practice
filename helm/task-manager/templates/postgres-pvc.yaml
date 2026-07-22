@@ -3,12 +3,14 @@ kind: PersistentVolumeClaim
 
 metadata:
   name: postgres-pvc
-  namespace: task-manager
+  namespace: {{ .Values.namespace }}
 
 spec:
   accessModes:
     - ReadWriteOnce
 
+  storageClassName: {{ .Values.postgres.storageClass }}  
+  
   resources:
     requests:
-      storage: 2Gi
+      storage: {{ .Values.postgres.storage }}

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: task-api-config
+  namespace: task-manager
+
+data:
+  DEBUG: {{ .Values.config.DEBUG | quote }}
+  ALGORITHM: {{ .Values.config.ALGORITHM | quote }}
+  ACCESS_TOKEN_EXPIRE_MINUTES: {{ .Values.config.ACCESS_TOKEN_EXPIRE_MINUTES | quote }}

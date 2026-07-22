@@ -6,12 +6,11 @@ metadata:
   namespace: task-manager
 
 spec:
+  type: ClusterIP
+
   selector:
     app: postgres
 
   ports:
-
-  - port: 5432
-    targetPort: 5432
-
-  type: ClusterIP
+    - port: 5432
+      targetPort: 5432
